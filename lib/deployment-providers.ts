@@ -231,11 +231,7 @@ function generateEnvironmentVariables(config: DeploymentConfig): Record<string, 
     case "neon":
       env.NEON_DATABASE_URL = config.credentials.NEON_DATABASE_URL
       break
-    case "supabase":
-      env.SUPABASE_URL = config.credentials.SUPABASE_URL
-      env.SUPABASE_ANON_KEY = config.credentials.SUPABASE_ANON_KEY
-      env.SUPABASE_SERVICE_KEY = config.credentials.SUPABASE_SERVICE_KEY
-      break
+
     case "planetscale":
       env.PLANETSCALE_DATABASE_URL = config.credentials.PLANETSCALE_DATABASE_URL
       break

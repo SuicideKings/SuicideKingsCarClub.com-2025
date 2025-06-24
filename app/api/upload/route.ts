@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { put } from "@vercel/blob"
-import { supabaseAdmin } from "@/lib/db"
 
 export async function POST(request: Request) {
   try {
@@ -25,23 +24,8 @@ export async function POST(request: Request) {
       access: "public",
     })
 
-    // Store metadata in database if this is a gallery image
-    if (folder === "gallery") {
-      const { error } = await supabaseAdmin.from("gallery_images").insert({
-        title: title || file.name,
-        description: description || null,
-        blob_url: blob.url,
-        pathname: filename,
-        chapter: chapter || null,
-        category: category || null,
-        content_type: file.type,
-      })
-
-      if (error) {
-        console.error("Error storing image metadata:", error)
-        return NextResponse.json({ error: "Failed to store image metadata" }, { status: 500 })
-      }
-    }
+    // Note: Gallery metadata storage removed with Supabase
+    // If you need to store metadata, implement with your preferred database
 
     return NextResponse.json({
       url: blob.url,

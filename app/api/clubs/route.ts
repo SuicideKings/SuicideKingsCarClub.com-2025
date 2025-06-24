@@ -4,8 +4,15 @@ import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { clubs } from "@/lib/db/schema"
 
+// Mark this route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+
 // Get all clubs
 export async function GET() {
+  // Check if database is available
+  if (!process.env.NEON_DATABASE_URL && !process.env.DATABASE_URL) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 500 })
+  }
   try {
     const session = await getServerSession(authOptions)
 

@@ -1,10 +1,18 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { members, events, orders } from "@/lib/db/schema"
 import { gte, count, sum, avg } from "drizzle-orm"
 
+// Mark this route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
+    // Check if database is available
+    if (!process.env.NEON_DATABASE_URL && !process.env.DATABASE_URL) {
+      return NextResponse.json({ error: "Database not configured" }, { status: 500 })
+    }
+
     const { startDate, endDate } = await request.json()
 
     const start = new Date(startDate)

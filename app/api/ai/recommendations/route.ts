@@ -3,7 +3,14 @@ import { db } from "@/lib/db"
 import { members, events, products, memberCars } from "@/lib/db/schema"
 import { eq, and, gte, desc } from "drizzle-orm"
 
+// Mark this route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
+  // Check if database is available
+  if (!process.env.NEON_DATABASE_URL && !process.env.DATABASE_URL) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 500 })
+  }
   try {
     const context = await request.json()
     const { memberId, memberPreferences, memberHistory, currentLocation } = context

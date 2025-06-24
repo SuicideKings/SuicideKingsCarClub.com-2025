@@ -1,20 +1,24 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import "./globals.css"
 import MobileNav from "@/components/mobile/mobile-nav"
 import InstallPrompt from "@/components/mobile/install-prompt"
 import MainNav from "@/components/main-nav"
 import AnnouncementBanner from "@/components/announcement-banner"
+import AuthProvider from "@/components/providers/session-provider"
 
 export const metadata: Metadata = {
   title: "v0 App",
   description: "Created with v0",
   generator: "v0.dev",
   manifest: "/manifest.json",
-  themeColor: "#dc2626",
   appleWebAppCapable: "yes",
   appleMobileWebAppStatusBarStyle: "black-translucent",
   appleMobileWebAppTitle: "SKCC",
+}
+
+export const viewport: Viewport = {
+  themeColor: "#dc2626",
 }
 
 export default function RootLayout({
@@ -32,11 +36,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SKCC" />
       </head>
       <body>
-        <AnnouncementBanner />
-        <MainNav />
-        {children}
-        <MobileNav />
-        <InstallPrompt />
+        <AuthProvider>
+          <AnnouncementBanner />
+          <MainNav />
+          {children}
+          <MobileNav />
+          <InstallPrompt />
+        </AuthProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `

@@ -85,15 +85,7 @@ const databaseProviders = [
     features: ["Auto-scaling", "Branching", "Point-in-time Recovery"],
     credentials: ["NEON_DATABASE_URL"],
   },
-  {
-    id: "supabase",
-    name: "Supabase",
-    icon: "🟢",
-    description: "Open source Firebase alternative",
-    free: true,
-    features: ["Auth", "Real-time", "Storage", "Edge Functions"],
-    credentials: ["SUPABASE_URL", "SUPABASE_ANON_KEY", "SUPABASE_SERVICE_KEY"],
-  },
+
   {
     id: "planetscale",
     name: "PlanetScale",
