@@ -1,16 +1,9 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import { forumTopics, forumCategories } from "@/lib/db/forum-schema"
+import { forumTopics } from "@/lib/db/forum-schema"
 import { eq, desc } from "drizzle-orm"
 
-// Mark this route as dynamic to prevent static generation
-export const dynamic = 'force-dynamic'
-
 export async function GET(request: Request) {
-  // Check if database is available
-  if (!process.env.NEON_DATABASE_URL && !process.env.DATABASE_URL) {
-    return NextResponse.json({ error: "Database not configured" }, { status: 500 })
-  }
   try {
     const { searchParams } = new URL(request.url)
     const categoryId = searchParams.get("categoryId")

@@ -1,9 +1,6 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-
-// Mark this page as dynamic to prevent static generation
-export const dynamic = 'force-dynamic'
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -41,9 +38,12 @@ interface MemberCar {
 }
 
 export default function MemberCarsPage() {
-  const { session, status } = useSession()
+  const session = useSession()
   const [cars, setCars] = useState<MemberCar[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  
+  const sessionData = session?.data
+  const status = session?.status
 
   useEffect(() => {
     if (status === "authenticated") {

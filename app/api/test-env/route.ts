@@ -9,8 +9,8 @@ export async function GET() {
       url: !!process.env.NEXTAUTH_URL,
     },
     database: {
-      url: !!process.env.DATABASE_URL,
-      
+      neonDatabaseUrl: !!process.env.NEON_DATABASE_URL,
+      databaseUrl: !!process.env.DATABASE_URL,
     },
   }
 

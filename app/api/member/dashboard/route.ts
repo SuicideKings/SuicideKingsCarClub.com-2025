@@ -1,21 +1,14 @@
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { getMemberFromToken } from "@/lib/member-auth"
 import { neon } from "@neondatabase/serverless"
 import { drizzle } from "drizzle-orm/neon-http"
 import { memberCars, events, eventRegistrations, messages } from "@/lib/db/schema"
 import { eq, and, gte, count } from "drizzle-orm"
 
-// Mark this route as dynamic to prevent static generation
-export const dynamic = 'force-dynamic'
-
 const sql = neon(process.env.DATABASE_URL!)
 const db = drizzle(sql)
 
 export async function GET(request: NextRequest) {
-  // Check if database is available
-  if (!process.env.NEON_DATABASE_URL && !process.env.DATABASE_URL) {
-    return NextResponse.json({ error: "Database not configured" }, { status: 500 })
-  }
   try {
     const authHeader = request.headers.get("authorization")
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

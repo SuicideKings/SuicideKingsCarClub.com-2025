@@ -4,8 +4,7 @@ import { authOptions } from "@/lib/auth"
 export async function GET() {
   // Check if we have the required environment variables
   const hasNextAuthSecret = !!process.env.NEXTAUTH_SECRET
-
-  const hasStackSecretServerKey = !!process.env.SKINGS_STACK_SECRET_SERVER_KEY
+  const hasStackSecret = !!process.env.STACK_SECRET_SERVER_KEY
 
   // Check if we have a secret in the auth options
   const hasAuthOptionsSecret = !!authOptions.secret
@@ -14,8 +13,7 @@ export async function GET() {
     status: "Auth configuration check",
     environment: {
       NEXTAUTH_SECRET: hasNextAuthSecret ? "✓ Set" : "✗ Missing",
-  
-      SKINGS_STACK_SECRET_SERVER_KEY: hasStackSecretServerKey ? "✓ Set" : "✗ Missing",
+      STACK_SECRET_SERVER_KEY: hasStackSecret ? "✓ Set" : "✗ Missing",
     },
     authOptions: {
       secret: hasAuthOptionsSecret ? "✓ Set" : "✗ Missing",

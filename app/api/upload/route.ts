@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { put } from "@vercel/blob"
+import { db } from "@/lib/db"
 
 export async function POST(request: Request) {
   try {
@@ -24,8 +25,20 @@ export async function POST(request: Request) {
       access: "public",
     })
 
-    // Note: Gallery metadata storage removed with Supabase
-    // If you need to store metadata, implement with your preferred database
+    // Store metadata in database if this is a gallery image
+    if (folder === "gallery") {
+      // TODO: Save to database with Drizzle ORM
+      // await db.insert(galleryImages).values({
+      //   title: title || filename,
+      //   description: description || null,
+      //   blob_url: blob.url,
+      //   pathname: blob.pathname,
+      //   chapter: chapter || null,
+      //   category: category || "general",
+      //   content_type: file.type,
+      //   file_size: file.size,
+      // })
+    }
 
     return NextResponse.json({
       url: blob.url,

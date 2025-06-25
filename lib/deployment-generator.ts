@@ -305,7 +305,9 @@ function generatePackageJson(config: DeploymentConfig): DeploymentFile {
     case "neon":
       dependencies["@neondatabase/serverless"] = "latest"
       break
-
+    case "supabase":
+      dependencies["@supabase/supabase-js"] = "latest"
+      break
     case "planetscale":
       dependencies["@planetscale/database"] = "latest"
       break

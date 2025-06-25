@@ -1,6 +1,6 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "suicide-kings-car-club",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -53,7 +53,6 @@
     "@radix-ui/react-tooltip": "latest",
     "@react-email/components": "latest",
     "@react-email/render": "latest",
-
     "@tidbcloud/serverless": "latest",
     "@types/better-sqlite3": "latest",
     "@types/pg": "latest",
@@ -112,6 +111,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",

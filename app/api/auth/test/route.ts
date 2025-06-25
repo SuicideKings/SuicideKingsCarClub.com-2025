@@ -3,16 +3,14 @@ import { NextResponse } from "next/server"
 export async function GET() {
   try {
     const hasNextAuthSecret = !!process.env.NEXTAUTH_SECRET
-    const hasStackSecret = !!process.env.STACK_SECRET_SERVER_KEY
-
+  const hasStackSecret = !!process.env.STACK_SECRET_SERVER_KEY
 
     return NextResponse.json({
       status: "success",
       environment: {
-        NEXTAUTH_SECRET: hasNextAuthSecret,
-        STACK_SECRET_SERVER_KEY: hasStackSecret,
-
-      },
+      NEXTAUTH_SECRET: hasNextAuthSecret,
+      STACK_SECRET_SERVER_KEY: hasStackSecret,
+    },
       nextAuthUrl: process.env.NEXTAUTH_URL || "Not set",
       nodeEnv: process.env.NODE_ENV,
       timestamp: new Date().toISOString(),

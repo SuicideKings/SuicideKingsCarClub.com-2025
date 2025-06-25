@@ -13,4 +13,11 @@ function getEnv(key: string, fallbacks: string[] = []): string | undefined {
 }
 
 export function getDatabaseUrl(): string {
-  // Supabase functions removed - use Neon database instead
+  const dbUrl = getEnv("NEON_DATABASE_URL", ["DATABASE_URL"])
+
+  if (!dbUrl) {
+    throw new Error("Missing database URL environment variable")
+  }
+
+  return dbUrl
+}

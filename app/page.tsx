@@ -1,28 +1,20 @@
-import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import MainNav from "@/components/main-nav"
 import ChapterCards from "@/components/chapter-cards"
 import FeaturedCars from "@/components/featured-cars"
 import EventsList from "@/components/events-list"
 import GalleryGrid from "@/components/gallery-grid"
 import ContactForm from "@/components/contact-form"
 import Footer from "@/components/footer"
-import AnnouncementBanner from "@/components/announcement-banner"
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Navigation */}
-      <MainNav />
-
-      {/* Announcement Banner - Can be toggled via admin panel */}
-      <AnnouncementBanner />
-
       {/* Hero Section */}
-      <div className="relative flex h-screen flex-col items-center justify-center">
+      <div className="relative flex h-screen flex-col items-center justify-center pt-28 md:pt-28">
         {/* Hero Background Image - Optimized for faster loading */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -33,6 +25,8 @@ export default function Home() {
             priority
             sizes="100vw"
             quality={85}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R"
           />
         </div>
 
@@ -99,20 +93,15 @@ export default function Home() {
                 <h2 className="mb-2 text-3xl font-bold">Annual Summer Show & Shine</h2>
                 <p className="mb-2 text-lg">June 15, 2025 • Los Angeles, CA</p>
                 <p className="text-gray-300">
-                  Our biggest event of the year featuring Continental classics from all chapters.
+                  Join us for our biggest event of the year featuring classic Lincolns, awards, and community
                 </p>
               </div>
-              <div className="flex flex-col space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
-                <Button size="lg" className="bg-red-700 text-white hover:bg-red-800" asChild>
-                  <Link href="/events/2/tickets">Buy Tickets</Link>
+              <div className="flex flex-col gap-3">
+                <Button size="lg" className="bg-red-700 hover:bg-red-600" asChild>
+                  <Link href="/events">Register Now</Link>
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-gray-400 bg-transparent text-white hover:bg-white/10"
-                  asChild
-                >
-                  <Link href="/events/2">Event Details</Link>
+                <Button size="lg" variant="outline" className="border-gray-400 text-white hover:bg-white/10" asChild>
+                  <Link href="/events">View Details</Link>
                 </Button>
               </div>
             </div>
@@ -120,78 +109,20 @@ export default function Home() {
         </div>
       </div>
 
-      {/* About Section */}
-      <section id="about" className="bg-black py-20 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-4xl font-bold">About Suicide Kings</h2>
-          <div className="mx-auto max-w-4xl">
-            <p className="mb-6 text-lg">
-              The Suicide Kings started in the Inland Empire of Southern California with just a few local Lincoln
-              Continentals. The first official announcement of the start of the club was in August of 2016, at Sancho's
-              Tacos in Huntington Beach. Since then the club has grown to include four chapters in California, and one
-              in Washington state.
-            </p>
-            <p className="mb-6 text-lg">
-              The goal of SK is to continue to grow, and provide a community for 60s Lincoln Continental owners to get
-              together, share the love of these classics, and enjoy the brotherhood that comes with the experience.
-            </p>
-            <p className="mb-10 text-xl font-semibold text-center">
-              Suicide Kings Car Club is about Honor, Loyalty, and Respect.
-            </p>
-
-            <h3 className="mb-6 text-center text-2xl font-bold">Our Chapters</h3>
-            <ChapterCards />
-          </div>
-        </div>
-      </section>
+      {/* Chapter Cards Section */}
+      <ChapterCards />
 
       {/* Featured Cars Section */}
-      <section id="cars" className="bg-gray-900 py-20 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-4xl font-bold">Featured Continentals</h2>
-          <FeaturedCars />
-        </div>
-      </section>
+      <FeaturedCars />
 
       {/* Events Section */}
-      <section id="events" className="bg-black py-20 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-4xl font-bold">Upcoming Events</h2>
-          <EventsList />
-        </div>
-      </section>
+      <EventsList />
 
       {/* Gallery Section */}
-      <section id="gallery" className="bg-gray-900 py-20 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-4xl font-bold">Gallery</h2>
-          <GalleryGrid />
-        </div>
-      </section>
-
-      {/* Membership Section */}
-      <section className="bg-black py-20 text-white">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-6 text-4xl font-bold">Join The Suicide Kings</h2>
-            <p className="mb-8 text-lg text-gray-300">
-              Become a member of our exclusive club dedicated to preserving and celebrating the legacy of the 1961-1969
-              Lincoln Continental.
-            </p>
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
-              <Link href="/membership">Apply for Membership</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <GalleryGrid />
 
       {/* Contact Section */}
-      <section id="contact" className="bg-gray-900 py-20 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-4xl font-bold">Contact Us</h2>
-          <ContactForm />
-        </div>
-      </section>
+      <ContactForm />
 
       {/* Footer */}
       <Footer />

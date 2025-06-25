@@ -28,7 +28,7 @@ export default function MobileNav() {
   return (
     <>
       {/* Mobile Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gray-800 md:hidden">
+      <div className="fixed top-12 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gray-800 md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
@@ -60,7 +60,7 @@ export default function MobileNav() {
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden">
-          <div className="fixed top-16 right-0 bottom-0 w-80 bg-black border-l border-gray-800 overflow-y-auto">
+          <div className="fixed top-20 right-0 bottom-0 w-80 bg-black border-l border-gray-800 overflow-y-auto">
             <div className="p-4">
               <div className="space-y-2">
                 {mobileNavItems.map((item) => {
