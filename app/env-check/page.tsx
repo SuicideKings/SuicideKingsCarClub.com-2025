@@ -113,14 +113,14 @@ export default function EnvCheckPage() {
                   <strong className="text-white">SKINGS_DATABASE_URL:</strong>
                   <p>Your Neon database connection URL</p>
                   <p className="mt-1 text-xs text-gray-400">
-                    Fallbacks: DATABASE_URL, POSTGRES_URL, POSTGRES_PRISMA_URL, SUPABASE_URL, NEON_DATABASE_URL
+                    Fallbacks: DATABASE_URL, POSTGRES_URL, POSTGRES_PRISMA_URL, NEON_DATABASE_URL
                   </p>
                 </div>
                 <div>
                   <strong className="text-white">SKINGS_STACK_SECRET_SERVER_KEY:</strong>
                   <p>Your Stack Auth secret key</p>
                   <p className="mt-1 text-xs text-gray-400">
-                    Fallbacks: NEXTAUTH_SECRET, AUTH_SECRET, JWT_SECRET, SUPABASE_JWT_SECRET
+                    Fallbacks: NEXTAUTH_SECRET, AUTH_SECRET, JWT_SECRET, STACK_SECRET_SERVER_KEY
                   </p>
                 </div>
                 <div>

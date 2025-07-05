@@ -1,18 +1,14 @@
 import { NextResponse } from "next/server"
-import { supabaseAdmin } from "@/lib/db"
+import { db } from "@/lib/db"
 
 export async function GET() {
   try {
-    // Test database connection
-    const { data, error } = await supabaseAdmin.from("admin_users").select("count(*)").limit(1)
-
-    if (error) {
-      throw error
-    }
-
+    // TODO: Test database connection with Drizzle ORM
+    // const result = await db.select({ count: sql`count(*)` }).from(adminUsers).limit(1)
+    
     return NextResponse.json({
-      status: "success",
-      message: "Database connection successful",
+      success: true,
+      message: "Database connection test not yet implemented with Drizzle ORM",
       timestamp: new Date().toISOString(),
     })
   } catch (error) {

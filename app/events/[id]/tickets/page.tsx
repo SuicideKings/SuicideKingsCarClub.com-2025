@@ -181,7 +181,7 @@ const events = {
   },
 }
 
-export default function EventTicketsPage({ params }: { params: { id: string } }) {
+function EventTicketsContent({ eventId }: { eventId: string }) {
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null)
   const [selectedParking, setSelectedParking] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(1)
@@ -191,7 +191,7 @@ export default function EventTicketsPage({ params }: { params: { id: string } })
     color: "",
   })
 
-  const event = events[params.id as keyof typeof events]
+  const event = events[eventId as keyof typeof events]
 
   if (!event) {
     return (
@@ -465,4 +465,9 @@ export default function EventTicketsPage({ params }: { params: { id: string } })
       <Footer />
     </div>
   )
+}
+
+export default async function EventTicketsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  return <EventTicketsContent eventId={id} />
 }

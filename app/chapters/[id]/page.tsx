@@ -102,8 +102,9 @@ const chapters = {
   },
 }
 
-export default function ChapterPage({ params }: { params: { id: string } }) {
-  const chapter = chapters[params.id as keyof typeof chapters]
+export default async function ChapterPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const chapter = chapters[id as keyof typeof chapters]
 
   if (!chapter) {
     notFound()
@@ -111,7 +112,6 @@ export default function ChapterPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <MainNav />
 
       {/* Chapter Header with Animated Background */}
       <div className="relative pt-16 overflow-hidden">

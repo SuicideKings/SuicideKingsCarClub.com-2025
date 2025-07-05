@@ -38,9 +38,12 @@ interface MemberCar {
 }
 
 export default function MemberCarsPage() {
-  const { data: session, status } = useSession()
+  const session = useSession()
   const [cars, setCars] = useState<MemberCar[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  
+  const sessionData = session?.data
+  const status = session?.status
 
   useEffect(() => {
     if (status === "authenticated") {

@@ -438,16 +438,7 @@ function generateDatabaseFiles(database: string): DeploymentFile[] {
       })
       break
 
-    case "supabase":
-      files.push({
-        path: "supabase/migrations/001_initial_schema.sql",
-        content: generatePostgreSQLSchema(),
-      })
-      files.push({
-        path: "supabase/seed.sql",
-        content: generateSeedData(),
-      })
-      break
+
 
     case "planetscale":
       files.push({
@@ -639,11 +630,7 @@ function generateEnvironmentFile(config: DeploymentConfig): DeploymentFile {
     case "neon":
       envVars.push(`NEON_DATABASE_URL=${config.credentials.NEON_DATABASE_URL || ""}`)
       break
-    case "supabase":
-      envVars.push(`SUPABASE_URL=${config.credentials.SUPABASE_URL || ""}`)
-      envVars.push(`SUPABASE_ANON_KEY=${config.credentials.SUPABASE_ANON_KEY || ""}`)
-      envVars.push(`SUPABASE_SERVICE_KEY=${config.credentials.SUPABASE_SERVICE_KEY || ""}`)
-      break
+
     case "planetscale":
       envVars.push(`PLANETSCALE_DATABASE_URL=${config.credentials.PLANETSCALE_DATABASE_URL || ""}`)
       break
@@ -1388,11 +1375,7 @@ function generateEnvDocumentation(config: DeploymentConfig): string {
     case "neon":
       documentation += "- `NEON_DATABASE_URL`: The connection string for your Neon PostgreSQL database.\n"
       break
-    case "supabase":
-      documentation += "- `SUPABASE_URL`: The URL of your Supabase instance.\n"
-      documentation += "- `SUPABASE_ANON_KEY`: The anonymous key for your Supabase instance.\n"
-      documentation += "- `SUPABASE_SERVICE_KEY`: The service key for your Supabase instance (use with caution).\n"
-      break
+
     case "planetscale":
       documentation += "- `PLANETSCALE_DATABASE_URL`: The connection string for your PlanetScale database.\n"
       break
