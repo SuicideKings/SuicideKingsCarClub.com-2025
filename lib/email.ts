@@ -267,3 +267,49 @@ export async function sendSubscriptionCreatedEmail(clubId: number, subscriptionI
     return { success: false, error }
   }
 }
+
+// Send PayPal payment failed notification to member
+export async function sendPayPalPaymentFailedEmail(
+  clubId: number,
+  memberEmail: string,
+  subscriptionId: string,
+  amount: string,
+  currency: string,
+  failureReason: string
+) {
+  try {
+    const club = await db.query.clubs.findFirst({
+      where: eq(clubs.id, clubId),
+    })
+
+    if (!club) {
+      throw new Error("Club not found")
+    }
+
+    // Calculate next retry date (typically 3-5 days from now for PayPal)
+    const retryDate = new Date()
+    retryDate.setDate(retryDate.getDate() + 5)
+
+    const emailHtml = render(
+      PaymentFailedEmail({
+        memberName: "Member",
+        clubName: club.name,
+        subscriptionId,
+        planName: club.membershipType || "Membership",
+        amount,
+        currency,
+        failureReason,
+        retryDate: retryDate.toLocaleDateString(),
+        updatePaymentUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/member/subscription`,
+        supportEmail: club.contactEmail || process.env.EMAIL_FROM || "support@suicidekingscarclub.com",
+      }),
+    )
+
+    return sendEmail(memberEmail, `Action Required: ${club.name} Payment Failed`, emailHtml)
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Failed to send PayPal payment failed email:", error)
+    }
+    return { success: false, error }
+  }
+}

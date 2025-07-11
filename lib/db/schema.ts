@@ -25,6 +25,10 @@ export const clubs = pgTable("clubs", {
   contactEmail: varchar("contact_email", { length: 255 }),
   website: varchar("website", { length: 255 }),
   socialLinks: jsonb("social_links"),
+  paypalSettings: jsonb("paypal_settings"),
+  paypalProductId: varchar("paypal_product_id", { length: 255 }),
+  paypalMonthlyPlanId: varchar("paypal_monthly_plan_id", { length: 255 }),
+  paypalYearlyPlanId: varchar("paypal_yearly_plan_id", { length: 255 }),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -43,6 +47,13 @@ export const members = pgTable("members", {
   profileImageUrl: varchar("profile_image_url", { length: 500 }),
   bio: text("bio"),
   carInfo: jsonb("car_info"),
+  isEmailVerified: boolean("is_email_verified").default(false),
+  paypalSubscriptionId: varchar("paypal_subscription_id", { length: 255 }),
+  subscriptionStatus: varchar("subscription_status", { length: 50 }),
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
+  membershipTier: varchar("membership_tier", { length: 50 }),
+  lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 })
@@ -133,6 +144,7 @@ export const apiKeys = pgTable("api_keys", {
   name: varchar("name", { length: 255 }).notNull(),
   key: varchar("key", { length: 255 }).notNull().unique(),
   userId: integer("user_id").references(() => adminUsers.id),
+  clubId: integer("club_id").references(() => clubs.id),
   permissions: jsonb("permissions"),
   isActive: boolean("is_active").default(true),
   lastUsed: timestamp("last_used"),
@@ -331,6 +343,37 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("created_at").defaultNow(),
 })
 
+// PayPal Webhook Logs Table
+export const paypalWebhookLogs = pgTable("paypal_webhook_logs", {
+  id: serial("id").primaryKey(),
+  clubId: integer("club_id").references(() => clubs.id),
+  webhookId: varchar("webhook_id", { length: 255 }).notNull(),
+  eventType: varchar("event_type", { length: 100 }).notNull(),
+  eventData: jsonb("event_data").notNull(),
+  processed: boolean("processed").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  processedAt: timestamp("processed_at"),
+  errorMessage: text("error_message"),
+})
+
+// PayPal Transactions Table
+export const paypalTransactions = pgTable("paypal_transactions", {
+  id: serial("id").primaryKey(),
+  clubId: integer("club_id").references(() => clubs.id),
+  memberId: integer("member_id").references(() => members.id),
+  paypalOrderId: varchar("paypal_order_id", { length: 255 }),
+  paypalSubscriptionId: varchar("paypal_subscription_id", { length: 255 }),
+  paypalPaymentId: varchar("paypal_payment_id", { length: 255 }),
+  transactionType: varchar("transaction_type", { length: 50 }).notNull(),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  currency: varchar("currency", { length: 3 }).default("USD"),
+  status: varchar("status", { length: 50 }).notNull(),
+  description: text("description"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+})
+
 // Update the schema export to include all tables
 export const schema = {
   adminUsers,
@@ -352,6 +395,8 @@ export const schema = {
   memberCars,
   eventRegistrations,
   messages,
+  paypalWebhookLogs,
+  paypalTransactions,
 }
 
 export default schema

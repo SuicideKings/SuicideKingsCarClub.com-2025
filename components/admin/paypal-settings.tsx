@@ -13,31 +13,31 @@ import { Eye, EyeOff, Save, TestTube, Settings, CheckCircle, XCircle } from "luc
 interface PayPalSettingsProps {
   clubId: number
   initialSettings?: {
-    paypalClientId?: string
-    paypalClientSecret?: string
-    paypalWebhookId?: string
+    hasCredentials?: boolean
+    clientId?: string
+    webhookId?: string
+    isProduction?: boolean
     paypalProductId?: string
     paypalMonthlyPlanId?: string
     paypalYearlyPlanId?: string
     monthlyPrice?: string
     yearlyPrice?: string
     currency?: string
-    paypalEnvironment?: string
   }
 }
 
 export default function PayPalSettings({ clubId, initialSettings }: PayPalSettingsProps) {
   const [settings, setSettings] = useState({
-    paypalClientId: initialSettings?.paypalClientId || "",
-    paypalClientSecret: initialSettings?.paypalClientSecret || "",
-    paypalWebhookId: initialSettings?.paypalWebhookId || "",
+    clientId: initialSettings?.clientId || "",
+    clientSecret: "",
+    webhookId: initialSettings?.webhookId || "",
+    isProduction: initialSettings?.isProduction || false,
     paypalProductId: initialSettings?.paypalProductId || "",
     paypalMonthlyPlanId: initialSettings?.paypalMonthlyPlanId || "",
     paypalYearlyPlanId: initialSettings?.paypalYearlyPlanId || "",
     monthlyPrice: initialSettings?.monthlyPrice || "99.99",
     yearlyPrice: initialSettings?.yearlyPrice || "999.99",
     currency: initialSettings?.currency || "USD",
-    paypalEnvironment: initialSettings?.paypalEnvironment || "sandbox",
   })
 
   const [showSecret, setShowSecret] = useState(false)
@@ -45,7 +45,7 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
   const [setupStep, setSetupStep] = useState(0)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
-  const isConfigured = settings.paypalClientId && settings.paypalClientSecret
+  const isConfigured = settings.clientId && settings.clientSecret
   const isFullySetup =
     isConfigured && settings.paypalProductId && settings.paypalMonthlyPlanId && settings.paypalYearlyPlanId
 
@@ -59,14 +59,20 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({
+          clientId: settings.clientId,
+          clientSecret: settings.clientSecret,
+          webhookId: settings.webhookId,
+          isProduction: settings.isProduction,
+        }),
       })
 
       if (response.ok) {
-        setMessage({ type: "success", text: "PayPal settings saved successfully!" })
+        const result = await response.json()
+        setMessage({ type: "success", text: result.message || "PayPal settings saved successfully!" })
       } else {
         const error = await response.json()
-        setMessage({ type: "error", text: error.message || "Failed to save settings" })
+        setMessage({ type: "error", text: error.error || "Failed to save settings" })
       }
     } catch (error) {
       setMessage({ type: "error", text: "An error occurred while saving settings" })
@@ -86,8 +92,8 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          clientId: settings.paypalClientId,
-          clientSecret: settings.paypalClientSecret,
+          clientId: settings.clientId,
+          clientSecret: settings.clientSecret,
         }),
       })
 
@@ -95,7 +101,7 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
         setMessage({ type: "success", text: "PayPal connection test successful!" })
       } else {
         const error = await response.json()
-        setMessage({ type: "error", text: error.message || "Connection test failed" })
+        setMessage({ type: "error", text: error.error || "Connection test failed" })
       }
     } catch (error) {
       setMessage({ type: "error", text: "An error occurred during connection test" })
@@ -178,10 +184,10 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="paypalEnvironment">Environment</Label>
+              <Label htmlFor="isProduction">Environment</Label>
               <Select
-                value={settings.paypalEnvironment}
-                onValueChange={(value) => setSettings({ ...settings, paypalEnvironment: value })}
+                value={settings.isProduction ? "live" : "sandbox"}
+                onValueChange={(value) => setSettings({ ...settings, isProduction: value === "live" })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select environment" />
@@ -213,23 +219,23 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="paypalClientId">PayPal Client ID</Label>
+              <Label htmlFor="clientId">PayPal Client ID</Label>
               <Input
-                id="paypalClientId"
-                value={settings.paypalClientId}
-                onChange={(e) => setSettings({ ...settings, paypalClientId: e.target.value })}
+                id="clientId"
+                value={settings.clientId}
+                onChange={(e) => setSettings({ ...settings, clientId: e.target.value })}
                 placeholder="Enter your PayPal Client ID"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="paypalClientSecret">PayPal Client Secret</Label>
+              <Label htmlFor="clientSecret">PayPal Client Secret</Label>
               <div className="relative">
                 <Input
-                  id="paypalClientSecret"
+                  id="clientSecret"
                   type={showSecret ? "text" : "password"}
-                  value={settings.paypalClientSecret}
-                  onChange={(e) => setSettings({ ...settings, paypalClientSecret: e.target.value })}
+                  value={settings.clientSecret}
+                  onChange={(e) => setSettings({ ...settings, clientSecret: e.target.value })}
                   placeholder="Enter your PayPal Client Secret"
                 />
                 <Button
@@ -245,11 +251,11 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="paypalWebhookId">PayPal Webhook ID</Label>
+              <Label htmlFor="webhookId">PayPal Webhook ID</Label>
               <Input
-                id="paypalWebhookId"
-                value={settings.paypalWebhookId}
-                onChange={(e) => setSettings({ ...settings, paypalWebhookId: e.target.value })}
+                id="webhookId"
+                value={settings.webhookId}
+                onChange={(e) => setSettings({ ...settings, webhookId: e.target.value })}
                 placeholder="Enter your PayPal Webhook ID"
               />
             </div>
@@ -258,7 +264,7 @@ export default function PayPalSettings({ clubId, initialSettings }: PayPalSettin
           <div className="flex gap-4">
             <Button
               onClick={handleTestConnection}
-              disabled={loading || !settings.paypalClientId || !settings.paypalClientSecret}
+              disabled={loading || !settings.clientId || !settings.clientSecret}
             >
               <TestTube className="h-4 w-4 mr-2" />
               Test Connection

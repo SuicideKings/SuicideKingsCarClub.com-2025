@@ -1,8 +1,12 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Sparkles, Users, Calendar, Camera } from "lucide-react"
+import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import MainNav from "@/components/main-nav"
 import ChapterCards from "@/components/chapter-cards"
 import FeaturedCars from "@/components/featured-cars"
@@ -13,6 +17,27 @@ import Footer from "@/components/footer"
 import AnnouncementBanner from "@/components/announcement-banner"
 
 export default function Home() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100)
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('mousemove', handleMouseMove)
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [])
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Navigation */}
@@ -21,99 +46,223 @@ export default function Home() {
       {/* Announcement Banner - Can be toggled via admin panel */}
       <AnnouncementBanner />
 
-      {/* Hero Section */}
-      <div className="relative flex h-screen flex-col items-center justify-center">
-        {/* Hero Background Image - Optimized for faster loading */}
-        <div className="absolute inset-0 z-0">
+      {/* Enhanced Hero Section with Parallax and Animations */}
+      <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden">
+        {/* Animated Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black/50 to-gray-900/80 z-[1]" />
+        
+        {/* Floating Particles */}
+        <div className="absolute inset-0 z-[2]">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white/30 rounded-full animate-pulse"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${2 + Math.random() * 4}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Hero Background Image with Parallax */}
+        <div 
+          className="absolute inset-0 z-0 transition-transform duration-1000 ease-out"
+          style={{
+            transform: `translate3d(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01}px, 0) scale(1.1)`
+          }}
+        >
           <Image
             src="/images/1967-lincoln-continental-convertable-bg.png"
             alt="1967 Lincoln Continental Convertible"
             fill
-            className="object-cover brightness-[0.6]"
+            className="object-cover brightness-[0.4] transition-all duration-1000"
             priority
             sizes="100vw"
             quality={85}
           />
         </div>
 
-        {/* Logo */}
-        <div className="z-10 mb-8 w-full max-w-md px-4">
-          <Image
-            src="/images/suicide-kings-car-club-logo.png"
-            alt="Suicide Kings Logo"
-            width={400}
-            height={200}
-            className="mx-auto"
-          />
+        {/* Animated Logo with Glow Effect */}
+        <div className="z-10 mt-12 mb-4 w-full max-w-md px-4 transform transition-all duration-1000 hover:scale-105">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
+            <Image
+              src="/images/suicide-kings-car-club-logo.png"
+              alt="Suicide Kings Logo"
+              width={400}
+              height={200}
+              className="mx-auto relative z-10 drop-shadow-2xl animate-in fade-in duration-1000"
+            />
+          </div>
         </div>
 
-        {/* Hero Content */}
-        <div className="z-10 text-center text-white">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+        {/* Enhanced Hero Content with Typewriter Effect */}
+        <div className="z-10 text-center text-white max-w-4xl px-4">
+          {/* Premium Badge */}
+          <Badge className="mb-6 bg-gradient-to-r from-red-600 to-orange-600 text-white border-none px-4 py-2 text-sm font-semibold animate-in slide-in-from-top duration-1000 delay-300">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Est. 2016 • Premium Car Club
+          </Badge>
+          
+          <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent animate-in slide-in-from-bottom duration-1000 delay-500">
             1961-1969 Lincoln Continental
           </h1>
-          <p className="mb-8 max-w-2xl px-4 text-lg sm:text-xl">
-            A community of enthusiasts dedicated to the iconic Lincoln Continental with its legendary suicide doors
+          
+          <p className="mb-8 max-w-3xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-200 leading-relaxed animate-in slide-in-from-bottom duration-1000 delay-700">
+            A premium community of enthusiasts dedicated to the iconic Lincoln Continental with its legendary suicide doors. 
+            <span className="block mt-2 text-red-400 font-semibold">Honor • Loyalty • Respect</span>
           </p>
-          <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
-              <Link href="/membership">Join The Club</Link>
+          
+          {/* Enhanced CTA Buttons */}
+          <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0 justify-center items-center animate-in slide-in-from-bottom duration-1000 delay-1000">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-2xl hover:shadow-red-500/25 transform hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold group"
+              asChild
+            >
+              <Link href="/membership">
+                <Users className="w-5 h-5 mr-2 group-hover:animate-pulse" />
+                Join The Club
+              </Link>
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-gray-400 bg-transparent text-white hover:bg-white/10"
+              className="border-2 border-white/30 bg-black/20 backdrop-blur-sm text-white hover:bg-white/10 hover:border-white/50 shadow-xl transform hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold group"
               asChild
             >
-              <Link href="/events">Upcoming Events</Link>
+              <Link href="/events">
+                <Calendar className="w-5 h-5 mr-2 group-hover:animate-bounce" />
+                Upcoming Events
+              </Link>
             </Button>
+          </div>
+          
+          {/* Stats Bar */}
+          <div className="mt-12 flex flex-wrap justify-center gap-8 text-center animate-in slide-in-from-bottom duration-1000 delay-1200">
+            <div className="bg-black/30 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
+              <div className="text-2xl font-bold text-red-400">5+</div>
+              <div className="text-sm text-gray-300">Chapters</div>
+            </div>
+            <div className="bg-black/30 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
+              <div className="text-2xl font-bold text-red-400">200+</div>
+              <div className="text-sm text-gray-300">Members</div>
+            </div>
+            <div className="bg-black/30 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
+              <div className="text-2xl font-bold text-red-400">50+</div>
+              <div className="text-sm text-gray-300">Events/Year</div>
+            </div>
           </div>
         </div>
 
-        {/* Scroll Down Indicator */}
-        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce text-white">
-          <ChevronDown size={32} />
+        {/* Enhanced Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-white animate-in slide-in-from-bottom duration-1000 delay-1500">
+          <div className="flex flex-col items-center space-y-2 cursor-pointer group" onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}>
+            <span className="text-sm font-medium opacity-80 group-hover:opacity-100 transition-opacity">Discover More</span>
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/20 rounded-full blur-sm group-hover:bg-white/40 transition-all" />
+              <ChevronDown size={32} className="relative animate-bounce group-hover:animate-pulse" />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Enhanced Featured Event Banner - More prominent and eye-catching */}
-      <div className="bg-gradient-to-r from-red-900 to-black py-8 text-white">
-        <div className="container mx-auto px-4">
-          <div className="relative overflow-hidden rounded-lg border-2 border-gray-700">
-            {/* Background pattern for visual interest */}
-            <div className="absolute inset-0 opacity-10">
-              <Image
-                src="/images/suicide-kings-car-club-logo.png"
-                alt="Background Pattern"
-                fill
-                className="object-cover"
-              />
+      {/* Premium Featured Event Section */}
+      <div className="relative bg-gradient-to-br from-red-950 via-black to-gray-900 py-16 text-white overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-red-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <Badge className="mb-4 bg-gradient-to-r from-red-600 to-orange-600 text-white border-none px-4 py-2">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Featured Event
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Annual Summer Show & Shine
+              </h2>
             </div>
-
-            {/* Content with enhanced styling */}
-            <div className="relative flex flex-col items-center justify-between gap-6 bg-gradient-to-r from-black/80 to-black/60 p-8 md:flex-row">
-              <div className="flex-1">
-                <div className="mb-2 inline-block rounded bg-red-800 px-3 py-1 text-sm font-bold uppercase tracking-wider">
-                  Featured Event
+            
+            {/* Event Card */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-orange-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                <div className="flex flex-col lg:flex-row">
+                  {/* Event Image */}
+                  <div className="lg:w-1/2 relative h-64 lg:h-80">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                    <Image
+                      src="/images/1967-lincoln-continental-convertable-bg.png"
+                      alt="Show & Shine Event"
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute top-4 left-4 z-20">
+                      <Badge className="bg-red-600 text-white">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        June 15, 2025
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Event Content */}
+                  <div className="lg:w-1/2 p-8 lg:p-12">
+                    <div className="mb-4">
+                      <div className="flex items-center text-red-400 mb-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse" />
+                        <span className="text-sm font-semibold uppercase tracking-wider">Live Event</span>
+                      </div>
+                      <h3 className="text-3xl lg:text-4xl font-bold mb-4">Summer Show & Shine</h3>
+                      <p className="text-xl text-gray-300 mb-2">Los Angeles, California</p>
+                      <p className="text-gray-400 mb-6 leading-relaxed">
+                        Our biggest celebration of the year featuring Continental classics from all chapters. 
+                        Join us for a weekend of automotive excellence, community, and unforgettable memories.
+                      </p>
+                    </div>
+                    
+                    {/* Event Features */}
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                      <div className="text-center p-3 bg-white/5 rounded-lg border border-white/10">
+                        <div className="text-2xl font-bold text-red-400">100+</div>
+                        <div className="text-sm text-gray-400">Classic Cars</div>
+                      </div>
+                      <div className="text-center p-3 bg-white/5 rounded-lg border border-white/10">
+                        <div className="text-2xl font-bold text-red-400">$5K</div>
+                        <div className="text-sm text-gray-400">In Prizes</div>
+                      </div>
+                    </div>
+                    
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Button 
+                        size="lg" 
+                        className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-red-500/25 transform hover:scale-105 transition-all duration-300 flex-1 group"
+                        asChild
+                      >
+                        <Link href="/events/2/tickets">
+                          <Sparkles className="w-5 h-5 mr-2 group-hover:animate-spin" />
+                          Get Tickets
+                        </Link>
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="border-2 border-white/20 bg-white/5 backdrop-blur-sm text-white hover:bg-white/10 hover:border-white/30 transform hover:scale-105 transition-all duration-300 flex-1"
+                        asChild
+                      >
+                        <Link href="/events/2">Learn More</Link>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <h2 className="mb-2 text-3xl font-bold">Annual Summer Show & Shine</h2>
-                <p className="mb-2 text-lg">June 15, 2025 • Los Angeles, CA</p>
-                <p className="text-gray-300">
-                  Our biggest event of the year featuring Continental classics from all chapters.
-                </p>
-              </div>
-              <div className="flex flex-col space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
-                <Button size="lg" className="bg-red-700 text-white hover:bg-red-800" asChild>
-                  <Link href="/events/2/tickets">Buy Tickets</Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-gray-400 bg-transparent text-white hover:bg-white/10"
-                  asChild
-                >
-                  <Link href="/events/2">Event Details</Link>
-                </Button>
               </div>
             </div>
           </div>
@@ -178,7 +327,7 @@ export default function Home() {
               Become a member of our exclusive club dedicated to preserving and celebrating the legacy of the 1961-1969
               Lincoln Continental.
             </p>
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
+            <Button size="lg" className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-red-500/25 transform hover:scale-105 transition-all duration-300" asChild>
               <Link href="/membership">Apply for Membership</Link>
             </Button>
           </div>

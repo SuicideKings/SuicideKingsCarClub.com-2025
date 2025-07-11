@@ -201,7 +201,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Menu, X } from 'lucide-react'
 
-export function MainNav() {
+export function GeneratedMainNav() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navigation = [
@@ -1069,7 +1069,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <MainNav />
+        <GeneratedMainNav />
         {children}
         <Footer />
       </body>

@@ -1,27 +1,44 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useState, useEffect, createContext, useContext } from "react"
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react"
 
-export function useAuth({ required = true, redirectTo = "/admin/login" } = {}) {
+interface User {
+  id: string
+  email: string
+  name?: string
+}
+
+interface AuthContextType {
+  user: User | null
+  isLoading: boolean
+  signOut: () => Promise<void>
+}
+
+export function useAuth(): AuthContextType {
   const { data: session, status } = useSession()
-  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
   const isLoading = status === "loading"
-  const isAuthenticated = !!session?.user
 
   useEffect(() => {
-    // Only redirect if we're not loading and authentication is required
-    if (required && !isLoading && !isAuthenticated) {
-      router.push(redirectTo)
+    if (session?.user) {
+      setUser({
+        id: session.user.id as string,
+        email: session.user.email as string,
+        name: session.user.name as string,
+      })
+    } else {
+      setUser(null)
     }
-  }, [required, isLoading, isAuthenticated, router, redirectTo])
+  }, [session])
+
+  const signOut = async () => {
+    await nextAuthSignOut()
+  }
 
   return {
-    session,
+    user,
     isLoading,
-    isAuthenticated,
-    user: session?.user,
-    signOut: () => signOut({ callbackUrl: "/admin/login" }),
+    signOut,
   }
 }

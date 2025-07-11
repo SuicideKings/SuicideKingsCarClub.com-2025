@@ -17,6 +17,7 @@ import {
   ChevronDown,
   ChevronRight,
   Palette,
+  Banknote,
 } from "lucide-react"
 
 const sidebarItems = [
@@ -74,6 +75,16 @@ const sidebarItems = [
     title: "Finances",
     icon: CreditCard,
     href: "/admin/finances",
+  },
+  {
+    title: "PayPal",
+    icon: Banknote,
+    href: "/admin/paypal",
+    subItems: [
+      { title: "Setup Wizard", href: "/admin/paypal/setup" },
+      { title: "Monitoring", href: "/admin/paypal/monitoring" },
+      { title: "Settings", href: "/admin/paypal/settings" },
+    ],
   },
   {
     title: "Maps",

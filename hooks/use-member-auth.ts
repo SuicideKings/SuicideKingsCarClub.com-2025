@@ -1,23 +1,29 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 
 interface Member {
-  id: string
+  id: number
+  name: string
   email: string
-  firstName: string
-  lastName: string
+  clubId: number
   role: string
   membershipStatus: string
-  memberNumber: string
+  subscriptionStatus?: string
+  profileImageUrl?: string
 }
 
-export function useMemberAuth() {
+interface MemberAuthReturn {
+  member: Member | null
+  isLoading: boolean
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
+  logout: () => void
+  refreshMember: () => Promise<void>
+}
+
+export function useMemberAuth(): MemberAuthReturn {
   const [member, setMember] = useState<Member | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const router = useRouter()
 
   useEffect(() => {
     checkAuth()
@@ -25,48 +31,73 @@ export function useMemberAuth() {
 
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem("memberToken")
+      const token = localStorage.getItem("token")
       if (!token) {
         setIsLoading(false)
         return
       }
 
-      const response = await fetch("/api/auth/verify", {
+      const response = await fetch("/api/member/auth/verify", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
-        const data = await response.json()
-        setMember(data.member)
-        setIsAuthenticated(true)
+        const memberData = await response.json()
+        setMember(memberData)
       } else {
-        // Token is invalid, remove it
-        localStorage.removeItem("memberToken")
-        setIsAuthenticated(false)
+        localStorage.removeItem("token")
+        setMember(null)
       }
     } catch (error) {
-      console.error("Auth check failed:", error)
-      localStorage.removeItem("memberToken")
-      setIsAuthenticated(false)
+      console.error("Auth verification failed:", error)
+      localStorage.removeItem("token")
+      setMember(null)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const signOut = () => {
-    localStorage.removeItem("memberToken")
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch("/api/member/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token)
+        setMember(data.member)
+        return { success: true }
+      } else {
+        return { success: false, error: data.error || "Login failed" }
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      return { success: false, error: "Network error" }
+    }
+  }
+
+  const logout = () => {
+    localStorage.removeItem("token")
     setMember(null)
-    setIsAuthenticated(false)
-    router.push("/auth/signin")
+  }
+
+  const refreshMember = async () => {
+    await checkAuth()
   }
 
   return {
     member,
     isLoading,
-    isAuthenticated,
-    signOut,
-    checkAuth,
+    login,
+    logout,
+    refreshMember,
   }
 }

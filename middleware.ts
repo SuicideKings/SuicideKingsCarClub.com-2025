@@ -2,11 +2,23 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { jwtVerify } from "jose"
 import { getToken } from "next-auth/jwt"
+import { getCategorySlug, isLegacyForumUrl, convertLegacyUrl } from "./lib/url-utils"
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET || "fallback-secret-key")
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
+
+  // Handle SEO URL redirects for forum
+  if (isLegacyForumUrl(path)) {
+    const newUrl = convertLegacyUrl(path)
+    if (newUrl) {
+      const url = new URL(newUrl, request.url)
+      // Copy search parameters to maintain functionality
+      url.search = request.nextUrl.search
+      return NextResponse.redirect(url, { status: 301 })
+    }
+  }
 
   // Define protected member routes
   const memberRoutes = ["/member"]
@@ -84,5 +96,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/member/:path*", "/admin/:path*"],
+  matcher: ["/member/:path*", "/admin/:path*", "/forum/:path*"],
 }

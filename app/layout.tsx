@@ -5,6 +5,7 @@ import MobileNav from "@/components/mobile/mobile-nav"
 import InstallPrompt from "@/components/mobile/install-prompt"
 import MainNav from "@/components/main-nav"
 import AnnouncementBanner from "@/components/announcement-banner"
+import { ThemeProvider } from "@/lib/theme-provider"
 
 export const metadata: Metadata = {
   title: "v0 App",
@@ -23,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#dc2626" />
@@ -32,11 +33,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SKCC" />
       </head>
       <body>
-        <AnnouncementBanner />
-        <MainNav />
-        {children}
-        <MobileNav />
-        <InstallPrompt />
+        <ThemeProvider defaultTheme="dark" storageKey="suicide-kings-theme">
+          <AnnouncementBanner />
+          <MainNav />
+          {children}
+          <MobileNav />
+          <InstallPrompt />
+        </ThemeProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `

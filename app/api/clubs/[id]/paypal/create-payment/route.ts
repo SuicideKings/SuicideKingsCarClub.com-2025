@@ -29,7 +29,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     // Create payment using club's PayPal credentials
     const payment = await createClubPayment(clubId, {
       amount: amount.toString(),
-      currency: club.currency || "USD",
+      currency: "USD",
       description,
       returnUrl: `${process.env.NEXTAUTH_URL}/api/clubs/${clubId}/paypal/payment-success`,
       cancelUrl: `${process.env.NEXTAUTH_URL}/api/clubs/${clubId}/paypal/payment-cancel`,

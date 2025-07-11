@@ -3,6 +3,22 @@ import Link from "next/link"
 
 const chapters = [
   {
+    id: "sknc",
+    name: "Northern California",
+    description: "Bringing Continental class to Northern California.",
+    fee: "$50.00 per Year",
+    region: "Northern California",
+    mapImage: "/images/maps/sknc-map.jpg",
+  },
+  {
+    id: "skcv",
+    name: "Coachella Valley",
+    description: "Desert cruising with the finest Continentals in the valley.",
+    fee: "$50.00 per Year",
+    region: "Coachella Valley, California",
+    mapImage: "/images/maps/skcv-map.jpg",
+  },
+  {
     id: "skie",
     name: "Inland Empire",
     description: "The founding chapter of the Suicide Kings Car Club.",
@@ -25,22 +41,6 @@ const chapters = [
     fee: "$50.00 per Year",
     region: "Los Angeles, California",
     mapImage: "/images/maps/skla-map.jpg",
-  },
-  {
-    id: "skcv",
-    name: "Coachella Valley",
-    description: "Desert cruising with the finest Continentals in the valley.",
-    fee: "$50.00 per Year",
-    region: "Coachella Valley, California",
-    mapImage: "/images/maps/skcv-map.jpg",
-  },
-  {
-    id: "sknc",
-    name: "Northern California",
-    description: "Bringing Continental class to Northern California.",
-    fee: "$50.00 per Year",
-    region: "Northern California",
-    mapImage: "/images/maps/sknc-map.jpg",
   },
 ]
 

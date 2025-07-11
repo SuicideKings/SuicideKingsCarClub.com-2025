@@ -55,8 +55,9 @@ Any recommendations would be greatly appreciated!`,
   return topics[id as keyof typeof topics]
 }
 
-export default async function TopicPage({ params }: { params: { id: string } }) {
-  const topic = await getTopic(params.id)
+export default async function TopicPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const topic = await getTopic(id)
 
   if (!topic) {
     notFound()

@@ -1,10 +1,9 @@
-const CACHE_NAME = "suicide-kings-v1"
+const CACHE_NAME = "suicide-kings-v2"
 const urlsToCache = [
   "/",
-  "/static/js/bundle.js",
-  "/static/css/main.css",
   "/images/suicide-kings-car-club-logo.png",
   "/offline.html",
+  "/manifest.json",
 ]
 const STATIC_CACHE = "skcc-static-v1.0.0"
 const DYNAMIC_CACHE = "skcc-dynamic-v1.0.0"
@@ -45,14 +44,31 @@ self.addEventListener("activate", (event) => {
 })
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      if (response) {
-        return response
-      }
-      return fetch(event.request)
-    }),
-  )
+  // Skip cross-origin requests
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return
+  }
+
+  // Only cache static assets, let pages load normally
+  if (event.request.url.includes('/_next/static/') || 
+      event.request.url.includes('/images/') ||
+      event.request.url.includes('/manifest.json')) {
+    // Cache static assets with cache-first strategy
+    event.respondWith(
+      caches.open(STATIC_CACHE).then(cache => {
+        return cache.match(event.request).then(cachedResponse => {
+          if (cachedResponse) {
+            return cachedResponse
+          }
+          return fetch(event.request).then(networkResponse => {
+            cache.put(event.request, networkResponse.clone())
+            return networkResponse
+          }).catch(() => cachedResponse)
+        })
+      })
+    )
+  }
+  // Let all other requests (pages, API calls) go through normally without SW interference
 })
 
 // Push notification event

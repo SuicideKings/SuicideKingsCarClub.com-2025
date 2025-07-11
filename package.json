@@ -6,7 +6,11 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test:site": "ts-node testing/automated-site-test.ts",
+    "test:site:prod": "ts-node testing/automated-site-test.ts https://suicidekingscarclub.com",
+    "setup-backend": "ts-node scripts/setup-backend.ts",
+    "migrate-paypal": "ts-node scripts/migrate-paypal-schema.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "latest",

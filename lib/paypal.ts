@@ -1,4 +1,8 @@
 import axios from "axios"
+import { db } from "./db"
+import { clubs } from "./db/schema"
+import { eq } from "drizzle-orm"
+import { paypalLogger, logPayPalError, logPayPalSuccess, logPayPalWarning } from "./paypal-logger"
 
 // PayPal API configuration
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID
@@ -7,22 +11,43 @@ const PAYPAL_BASE_URL =
   process.env.NODE_ENV === "production" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com"
 
 // PayPal access token cache
-let accessTokenCache: { token: string; expiresAt: number } | null = null
+let accessTokenCache: { [key: string]: { token: string; expiresAt: number } } = {}
 
-// Get PayPal access token
-async function getAccessToken(): Promise<string> {
+// Get PayPal access token for a specific club or global
+async function getAccessToken(clubId?: number): Promise<string> {
   const currentTime = Date.now()
+  const cacheKey = clubId ? `club_${clubId}` : "global"
 
   // Use cached token if still valid
-  if (accessTokenCache && accessTokenCache.expiresAt > currentTime) {
-    return accessTokenCache.token
+  if (accessTokenCache[cacheKey] && accessTokenCache[cacheKey].expiresAt > currentTime) {
+    return accessTokenCache[cacheKey].token
   }
 
-  if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+  let clientId = PAYPAL_CLIENT_ID
+  let clientSecret = PAYPAL_CLIENT_SECRET
+
+  // If clubId is provided, try to get club-specific PayPal credentials
+  if (clubId) {
+    try {
+      const club = await db.select().from(clubs).where(eq(clubs.id, clubId)).limit(1)
+      if (club.length > 0 && club[0].paypalSettings) {
+        const paypalSettings = club[0].paypalSettings as any
+        if (paypalSettings.clientId && paypalSettings.clientSecret) {
+          clientId = paypalSettings.clientId
+          clientSecret = paypalSettings.clientSecret
+        }
+      }
+    } catch (error) {
+      // Fall back to global credentials if club-specific ones fail
+      console.warn(`Failed to get club-specific PayPal credentials for club ${clubId}, using global credentials`)
+    }
+  }
+
+  if (!clientId || !clientSecret) {
     throw new Error("PayPal credentials are not configured")
   }
 
-  const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString("base64")
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64")
 
   try {
     const response = await axios.post(`${PAYPAL_BASE_URL}/v1/oauth2/token`, "grant_type=client_credentials", {
@@ -35,7 +60,7 @@ async function getAccessToken(): Promise<string> {
     const { access_token, expires_in } = response.data
 
     // Cache the token
-    accessTokenCache = {
+    accessTokenCache[cacheKey] = {
       token: access_token,
       expiresAt: currentTime + expires_in * 1000 - 60000, // Subtract 1 minute for safety
     }
@@ -58,9 +83,10 @@ export async function createSubscription(
   },
   returnUrl: string,
   cancelUrl: string,
+  clubId?: number,
 ) {
   try {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken(clubId)
 
     const subscriptionPayload = {
       plan_id: planId,
@@ -105,9 +131,9 @@ export async function createSubscription(
 }
 
 // Get subscription details
-export async function getSubscription(subscriptionId: string) {
+export async function getSubscription(subscriptionId: string, clubId?: number) {
   try {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken(clubId)
 
     const response = await axios.get(`${PAYPAL_BASE_URL}/v1/billing/subscriptions/${subscriptionId}`, {
       headers: {
@@ -133,9 +159,10 @@ export async function createPayment(paymentData: {
   description: string
   returnUrl: string
   cancelUrl: string
+  clubId?: number
 }) {
   try {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken(paymentData.clubId)
 
     const paymentPayload = {
       intent: "CAPTURE",
@@ -182,9 +209,10 @@ export async function createClubProduct(clubData: {
   name: string
   description: string
   category: string
+  clubId?: number
 }) {
   try {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken(clubData.clubId)
 
     const productPayload = {
       name: `${clubData.name} Membership`,
@@ -220,9 +248,10 @@ export async function createClubSubscriptionPlan(planData: {
   amount: string
   currency: string
   interval: string
+  clubId?: number
 }) {
   try {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken(planData.clubId)
 
     const planPayload = {
       product_id: planData.productId,
@@ -271,9 +300,9 @@ export async function createClubSubscriptionPlan(planData: {
 }
 
 // Test club PayPal connection
-export async function testClubPayPalConnection(clubId: string) {
+export async function testClubPayPalConnection(clubId: number) {
   try {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken(clubId)
 
     // Test by getting account info
     const response = await axios.get(`${PAYPAL_BASE_URL}/v1/identity/oauth2/userinfo?schema=paypalv1.1`, {
@@ -301,7 +330,7 @@ export async function testClubPayPalConnection(clubId: string) {
 
 // Create club payment
 export async function createClubPayment(
-  clubId: string,
+  clubId: number,
   paymentData: {
     amount: string
     currency: string
@@ -313,12 +342,13 @@ export async function createClubPayment(
   return createPayment({
     ...paymentData,
     description: `${paymentData.description} - Club ID: ${clubId}`,
+    clubId,
   })
 }
 
 // Create club subscription
 export async function createClubSubscription(
-  clubId: string,
+  clubId: number,
   planId: string,
   subscriberData: {
     name: string
@@ -327,12 +357,12 @@ export async function createClubSubscription(
   returnUrl: string,
   cancelUrl: string,
 ) {
-  return createSubscription(planId, subscriberData, returnUrl, cancelUrl)
+  return createSubscription(planId, subscriberData, returnUrl, cancelUrl, clubId)
 }
 
 // Verify club webhook signature
 export function verifyClubWebhookSignature(
-  clubId: string,
+  clubId: number,
   headers: Record<string, string>,
   body: string,
   webhookId: string,
@@ -362,6 +392,65 @@ export function verifyWebhookSignature(headers: Record<string, string>, body: st
   }
 }
 
+// Update club PayPal settings
+export async function updateClubPayPalSettings(clubId: number, settings: {
+  clientId: string
+  clientSecret: string
+  webhookId?: string
+  isProduction?: boolean
+}) {
+  try {
+    await db.update(clubs)
+      .set({
+        paypalSettings: settings,
+        updatedAt: new Date()
+      })
+      .where(eq(clubs.id, clubId))
+    
+    // Clear the cached token for this club
+    const cacheKey = `club_${clubId}`
+    if (accessTokenCache[cacheKey]) {
+      delete accessTokenCache[cacheKey]
+    }
+    
+    return { success: true }
+  } catch (error) {
+    console.error("Error updating club PayPal settings:", error)
+    throw new Error("Failed to update club PayPal settings")
+  }
+}
+
+// Get club PayPal settings
+export async function getClubPayPalSettings(clubId: number) {
+  try {
+    const club = await db.select().from(clubs).where(eq(clubs.id, clubId)).limit(1)
+    if (club.length === 0) {
+      throw new Error("Club not found")
+    }
+    
+    const settings = club[0].paypalSettings as any
+    if (!settings) {
+      return null
+    }
+    
+    // Return settings without exposing sensitive data
+    return {
+      hasCredentials: !!(settings.clientId && settings.clientSecret),
+      webhookId: settings.webhookId,
+      isProduction: settings.isProduction || false,
+      clientId: settings.clientId ? settings.clientId.substring(0, 8) + "..." : null
+    }
+  } catch (error) {
+    console.error("Error getting club PayPal settings:", error)
+    throw new Error("Failed to get club PayPal settings")
+  }
+}
+
+// Get PayPal access token for a specific club (exported for external use)
+export async function getClubPayPalAccessToken(clubId: number): Promise<string> {
+  return await getAccessToken(clubId)
+}
+
 export default {
   createSubscription,
   getSubscription,
@@ -373,4 +462,6 @@ export default {
   createClubPayment,
   createClubSubscription,
   verifyClubWebhookSignature,
+  updateClubPayPalSettings,
+  getClubPayPalSettings,
 }
