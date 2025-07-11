@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import "./globals.css"
 import MobileNav from "@/components/mobile/mobile-nav"
 import InstallPrompt from "@/components/mobile/install-prompt"
@@ -12,10 +12,12 @@ export const metadata: Metadata = {
   description: "Created with v0",
   generator: "v0.dev",
   manifest: "/manifest.json",
+}
+
+export const viewport: Viewport = {
   themeColor: "#dc2626",
-  appleWebAppCapable: "yes",
-  appleMobileWebAppStatusBarStyle: "black-translucent",
-  appleMobileWebAppTitle: "SKCC",
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -27,7 +29,6 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#dc2626" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="SKCC" />
