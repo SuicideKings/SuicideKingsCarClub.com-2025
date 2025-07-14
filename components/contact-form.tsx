@@ -48,19 +48,19 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl rounded-lg border border-gray-800 bg-black p-8">
+    <div className="mx-auto max-w-4xl rounded-2xl border border-gray-700/50 bg-gradient-to-br from-black/80 to-gray-900/80 backdrop-blur-xl p-8 lg:p-12 shadow-2xl">
       {submitMessage ? (
         <div className="text-center">
           <p className="text-lg text-green-400">{submitMessage}</p>
-          <Button className="mt-4 bg-red-700 text-white hover:bg-red-800" onClick={() => setSubmitMessage("")}>
+          <Button className="mt-6 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-red-500/25 transform hover:scale-105 transition-all duration-300 px-8 py-3 text-lg font-semibold" onClick={() => setSubmitMessage("")}>
             Send Another Message
           </Button>
         </div>
       ) : (
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="grid gap-6 md:grid-cols-2">
+        <form className="space-y-8" onSubmit={handleSubmit}>
+          <div className="grid gap-8 lg:grid-cols-2">
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium">
+              <label htmlFor="name" className="mb-3 block text-base font-semibold text-gray-200">
                 Name
               </label>
               <input
@@ -68,13 +68,13 @@ export default function ContactForm() {
                 id="name"
                 value={formState.name}
                 onChange={handleChange}
-                className="w-full rounded-md border border-gray-800 bg-gray-900 px-4 py-2 text-white"
+                className="w-full rounded-xl border-2 border-gray-700 bg-gray-900/50 backdrop-blur-sm px-6 py-4 text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300 text-lg"
                 placeholder="Your name"
                 required
               />
             </div>
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium">
+              <label htmlFor="email" className="mb-3 block text-base font-semibold text-gray-200">
                 Email
               </label>
               <input
@@ -82,14 +82,14 @@ export default function ContactForm() {
                 id="email"
                 value={formState.email}
                 onChange={handleChange}
-                className="w-full rounded-md border border-gray-800 bg-gray-900 px-4 py-2 text-white"
+                className="w-full rounded-xl border-2 border-gray-700 bg-gray-900/50 backdrop-blur-sm px-6 py-4 text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300 text-lg"
                 placeholder="your.email@example.com"
                 required
               />
             </div>
           </div>
           <div>
-            <label htmlFor="subject" className="mb-2 block text-sm font-medium">
+            <label htmlFor="subject" className="mb-3 block text-base font-semibold text-gray-200">
               Subject
             </label>
             <input
@@ -97,26 +97,26 @@ export default function ContactForm() {
               id="subject"
               value={formState.subject}
               onChange={handleChange}
-              className="w-full rounded-md border border-gray-800 bg-gray-900 px-4 py-2 text-white"
+              className="w-full rounded-xl border-2 border-gray-700 bg-gray-900/50 backdrop-blur-sm px-6 py-4 text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300 text-lg"
               placeholder="How can we help?"
               required
             />
           </div>
           <div>
-            <label htmlFor="message" className="mb-2 block text-sm font-medium">
+            <label htmlFor="message" className="mb-3 block text-base font-semibold text-gray-200">
               Message
             </label>
             <textarea
               id="message"
-              rows={4}
+              rows={6}
               value={formState.message}
               onChange={handleChange}
-              className="w-full rounded-md border border-gray-800 bg-gray-900 px-4 py-2 text-white"
+              className="w-full rounded-xl border-2 border-gray-700 bg-gray-900/50 backdrop-blur-sm px-6 py-4 text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300 text-lg resize-none"
               placeholder="Your message..."
               required
             ></textarea>
           </div>
-          <Button type="submit" className="w-full bg-red-700 text-white hover:bg-red-800" disabled={isSubmitting}>
+          <Button type="submit" className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-red-500/25 transform hover:scale-105 transition-all duration-300 px-8 py-4 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed" disabled={isSubmitting}>
             {isSubmitting ? "Sending..." : "Send Message"}
           </Button>
         </form>
