@@ -6,8 +6,15 @@ import { memberCars } from "@/lib/db/schema"
 import { eq, and } from "drizzle-orm"
 import { z } from "zod"
 
-const sql = neon(process.env.DATABASE_URL!)
-const db = drizzle(sql)
+// Initialize database connection only when environment variables are available
+function getDatabase() {
+  const databaseUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error('No database connection string was provided. Please set DATABASE_URL or NEON_DATABASE_URL environment variable.')
+  }
+  const sql = neon(databaseUrl)
+  return drizzle(sql)
+}
 
 const carSchema = z.object({
   make: z.string().min(1),
@@ -32,6 +39,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Invalid token" }, { status: 401 })
     }
 
+    const db = getDatabase()
     const cars = await db
       .select()
       .from(memberCars)
@@ -65,6 +73,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validated = carSchema.parse(body)
 
+    const db = getDatabase()
     // If setting as primary, first unset any existing primary car
     if (validated.isPrimary) {
       await db
@@ -114,6 +123,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     const validated = carSchema.parse(body)
 
+    const db = getDatabase()
     // If setting as primary, first unset any existing primary car
     if (validated.isPrimary) {
       await db
@@ -164,6 +174,7 @@ export async function DELETE(request: NextRequest) {
 
     const { id } = await request.json()
 
+    const db = getDatabase()
     await db
       .delete(memberCars)
       .where(

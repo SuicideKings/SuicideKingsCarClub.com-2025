@@ -5,8 +5,15 @@ import { drizzle } from "drizzle-orm/neon-http"
 import { memberCars, events, eventRegistrations, messages } from "@/lib/db/schema"
 import { eq, and, gte, count } from "drizzle-orm"
 
-const sql = neon(process.env.DATABASE_URL!)
-const db = drizzle(sql)
+// Initialize database connection only when environment variables are available
+function getDatabase() {
+  const databaseUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error('No database connection string was provided. Please set DATABASE_URL or NEON_DATABASE_URL environment variable.')
+  }
+  const sql = neon(databaseUrl)
+  return drizzle(sql)
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,6 +29,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Invalid token" }, { status: 401 })
     }
 
+    const db = getDatabase()
     // Get member stats
     const [carsCount] = await db.select({ count: count() }).from(memberCars).where(eq(memberCars.memberId, member.id))
 

@@ -5,8 +5,15 @@ import { members } from "./db/schema"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/neon-http"
 
-const sql = neon(process.env.DATABASE_URL!)
-const db = drizzle(sql)
+// Initialize database connection only when environment variables are available
+function getDatabase() {
+  const databaseUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error('No database connection string was provided. Please set DATABASE_URL or NEON_DATABASE_URL environment variable.')
+  }
+  const sql = neon(databaseUrl)
+  return drizzle(sql)
+}
 
 export interface MemberSession {
   id: number
@@ -55,6 +62,7 @@ export async function verifyMemberSession(token: string): Promise<MemberSession 
 
 export async function authenticateMember(email: string, password: string) {
   try {
+    const db = getDatabase()
     const member = await db.select().from(members).where(eq(members.email, email)).limit(1)
 
     if (!member.length || !member[0].password) {
@@ -97,6 +105,7 @@ export async function registerMember(memberData: {
   clubId: number
 }) {
   try {
+    const db = getDatabase()
     // Check if member already exists
     const existingMember = await db.select().from(members).where(eq(members.email, memberData.email)).limit(1)
 
@@ -142,6 +151,7 @@ export async function getMemberFromToken(token: string) {
     const session = await verifyMemberSession(token)
     if (!session) return null
 
+    const db = getDatabase()
     const member = await db.select().from(members).where(eq(members.id, session.id)).limit(1)
 
     return member.length > 0 ? member[0] : null
