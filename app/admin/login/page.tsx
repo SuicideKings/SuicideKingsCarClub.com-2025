@@ -59,8 +59,8 @@ export default function LoginPage() {
   // For development only - auto-fill credentials
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      setEmail('admin@suicidekings.com')
-      setPassword('admin123')
+      setEmail('alex@suicidekingscarclub.com')
+      setPassword('admin12345')
     }
   }, [])
 
