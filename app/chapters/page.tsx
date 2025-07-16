@@ -6,6 +6,15 @@ import AnnouncementBanner from "@/components/announcement-banner"
 
 const chapters = [
   {
+    id: "sknc",
+    name: "Northern California",
+    fullName: "Suicide Kings Northern California",
+    description: "Bringing Continental class to Northern California.",
+    location: "Northern California",
+    memberCount: 20,
+    foundedYear: 2018,
+  },
+  {
     id: "skie",
     name: "Inland Empire",
     fullName: "Suicide Kings Inland Empire",
@@ -13,15 +22,6 @@ const chapters = [
     location: "Inland Empire, Southern California",
     memberCount: 24,
     foundedYear: 2016,
-  },
-  {
-    id: "skwa",
-    name: "Washington",
-    fullName: "Suicide Kings Washington",
-    description: "Our Pacific Northwest chapter brings together Continental enthusiasts.",
-    location: "Washington State",
-    memberCount: 18,
-    foundedYear: 2018,
   },
   {
     id: "skla",
@@ -33,6 +33,15 @@ const chapters = [
     foundedYear: 2017,
   },
   {
+    id: "skwa",
+    name: "Washington",
+    fullName: "Suicide Kings Washington",
+    description: "Our Pacific Northwest chapter brings together Continental enthusiasts.",
+    location: "Washington State",
+    memberCount: 18,
+    foundedYear: 2018,
+  },
+  {
     id: "skcv",
     name: "Coachella Valley",
     fullName: "Suicide Kings Coachella Valley",
@@ -40,15 +49,6 @@ const chapters = [
     location: "Coachella Valley, California",
     memberCount: 15,
     foundedYear: 2019,
-  },
-  {
-    id: "sknc",
-    name: "Northern California",
-    fullName: "Suicide Kings Northern California",
-    description: "Bringing Continental class to Northern California.",
-    location: "Northern California",
-    memberCount: 20,
-    foundedYear: 2018,
   },
 ]
 

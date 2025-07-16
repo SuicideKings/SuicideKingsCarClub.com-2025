@@ -16,9 +16,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox"
 
 const chapters = [
-  { id: 1, name: "Los Angeles (SKLA)", value: "skla" },
-  { id: 2, name: "Inland Empire (SKIE)", value: "skie" },
   { id: 3, name: "Northern California (SKNC)", value: "sknc" },
+  { id: 2, name: "Inland Empire (SKIE)", value: "skie" },
+  { id: 1, name: "Los Angeles (SKLA)", value: "skla" },
   { id: 4, name: "Washington (SKWA)", value: "skwa" },
   { id: 5, name: "Coachella Valley (SKCV)", value: "skcv" },
 ]

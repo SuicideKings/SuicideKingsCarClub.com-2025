@@ -9,11 +9,11 @@ import Footer from "@/components/footer"
 // This would typically come from a database
 const galleryCategories = [
   { id: "all", name: "All Photos" },
-  { id: "skie", name: "Inland Empire" },
-  { id: "skwa", name: "Washington" },
-  { id: "skla", name: "Los Angeles" },
-  { id: "skcv", name: "Coachella Valley" },
   { id: "sknc", name: "Northern California" },
+  { id: "skie", name: "Inland Empire" },
+  { id: "skla", name: "Los Angeles" },
+  { id: "skwa", name: "Washington" },
+  { id: "skcv", name: "Coachella Valley" },
   { id: "events", name: "Events" },
   { id: "cars", name: "Cars" },
 ]
