@@ -6,18 +6,18 @@ import Footer from "@/components/footer"
 
 const chapters = [
   {
+    id: "sknc",
+    name: "SKNC - Northern California",
+    description: "Bringing Continental class to Northern California.",
+    fee: "$50.00 per Year",
+    location: "Northern California",
+  },
+  {
     id: "skie",
     name: "SKIE - Inland Empire",
     description: "The founding chapter of the Suicide Kings Car Club.",
     fee: "$50.00 per Year",
     location: "Inland Empire, Southern California",
-  },
-  {
-    id: "skwa",
-    name: "SKWA - Washington",
-    description: "Our Pacific Northwest chapter for Continental enthusiasts.",
-    fee: "$50.00 per Year",
-    location: "Washington State",
   },
   {
     id: "skla",
@@ -27,18 +27,18 @@ const chapters = [
     location: "Los Angeles, California",
   },
   {
+    id: "skwa",
+    name: "SKWA - Washington",
+    description: "Our Pacific Northwest chapter for Continental enthusiasts.",
+    fee: "$50.00 per Year",
+    location: "Washington State",
+  },
+  {
     id: "skcv",
     name: "SKCV - Coachella Valley",
     description: "Desert cruising with the finest Continentals in the valley.",
     fee: "$50.00 per Year",
     location: "Coachella Valley, California",
-  },
-  {
-    id: "sknc",
-    name: "SKNC - Northern California",
-    description: "Bringing Continental class to Northern California.",
-    fee: "$50.00 per Year",
-    location: "Northern California",
   },
 ]
 
