@@ -4,7 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Users, Car, Calendar, ImageIcon, MessageSquare, Menu, X, ShoppingBag, MessageCircle } from "lucide-react"
+import { Home, Users, Car, Calendar, ImageIcon, MessageSquare, Menu, X, ShoppingBag, MessageCircle, MapPin } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -15,6 +15,7 @@ export default function MainNav() {
   const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "About", href: "/about", icon: Users },
+    { name: "Chapters", href: "/chapters", icon: MapPin },
     { name: "Cars", href: "/cars", icon: Car },
     { name: "Events", href: "/events", icon: Calendar },
     { name: "Gallery", href: "/gallery", icon: ImageIcon },

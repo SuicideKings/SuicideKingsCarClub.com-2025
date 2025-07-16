@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import AdminNav from "@/components/admin/admin-nav"
-import AdminSidebar from "@/components/admin/admin-sidebar"
 import { useAuth } from "@/hooks/use-auth"
 
 interface GalleryImage {
@@ -115,15 +113,9 @@ export default function EditGalleryImagePage({ params }: { params: { id: string 
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900">
-        <AdminNav />
-        <div className="flex">
-          <AdminSidebar />
-          <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
-            <div className="flex h-64 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-white" />
-            </div>
-          </main>
+      <div className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-white" />
         </div>
       </div>
     )
@@ -131,33 +123,23 @@ export default function EditGalleryImagePage({ params }: { params: { id: string 
 
   if (error && !image) {
     return (
-      <div className="min-h-screen bg-gray-900">
-        <AdminNav />
-        <div className="flex">
-          <AdminSidebar />
-          <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
-            <div className="rounded-lg border border-red-800 bg-red-900/20 p-4 text-center text-red-400">{error}</div>
-            <div className="mt-4 text-center">
-              <Button
-                variant="outline"
-                className="border-gray-700 text-white hover:bg-gray-800"
-                onClick={() => router.push("/admin/gallery")}
-              >
-                Back to Gallery
-              </Button>
-            </div>
-          </main>
+      <div className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="rounded-lg border border-red-800 bg-red-900/20 p-4 text-center text-red-400">{error}</div>
+        <div className="mt-4 text-center">
+          <Button
+            variant="outline"
+            className="border-gray-700 text-white hover:bg-gray-800"
+            onClick={() => router.push("/admin/gallery")}
+          >
+            Back to Gallery
+          </Button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <AdminNav />
-      <div className="flex">
-        <AdminSidebar />
-        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Edit Gallery Image</h1>
           </div>
@@ -274,8 +256,6 @@ export default function EditGalleryImagePage({ params }: { params: { id: string 
               </div>
             </form>
           </div>
-        </main>
-      </div>
     </div>
   )
 }

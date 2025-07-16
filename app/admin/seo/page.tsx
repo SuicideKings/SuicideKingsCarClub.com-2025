@@ -27,8 +27,6 @@ import {
   Copy,
   ExternalLink
 } from "lucide-react"
-import AdminNav from "@/components/admin/admin-nav"
-import AdminSidebar from "@/components/admin/admin-sidebar"
 import { cn } from "@/lib/utils"
 
 interface SEOSettings {
@@ -171,12 +169,7 @@ export default function SEOAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
-      <AdminNav />
-      <div className="flex">
-        <AdminSidebar />
-        
-        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -657,8 +650,6 @@ export default function SEOAdminPage() {
               </Card>
             </TabsContent>
           </Tabs>
-        </main>
-      </div>
     </div>
   )
 }

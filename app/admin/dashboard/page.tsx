@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import AdminNav from "@/components/admin/admin-nav"
-import AdminSidebar from "@/components/admin/admin-sidebar"
 import MembershipStats from "@/components/admin/membership-stats"
 import RecentApplications from "@/components/admin/recent-applications"
 import UpcomingRenewals from "@/components/admin/upcoming-renewals"
@@ -52,13 +50,7 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
-      <AdminNav />
-
-      <div className="flex">
-        <AdminSidebar />
-
-        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-8">
           {/* Enhanced Header with Real-time Info */}
           <div className="mb-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -232,8 +224,6 @@ export default function AdminDashboardPage() {
               </TabsContent>
             </Tabs>
           </div>
-        </main>
-      </div>
     </div>
   )
 }

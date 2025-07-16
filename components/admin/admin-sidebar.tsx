@@ -114,7 +114,7 @@ export default function AdminSidebar() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] w-64 flex-col bg-gray-900">
+    <div className="hidden lg:flex h-[calc(100vh-4rem)] w-64 flex-col bg-gray-900">
       <div className="flex items-center justify-center border-b border-gray-800 py-4">
         <Image
           src="/images/suicide-kings-car-club-logo.png"

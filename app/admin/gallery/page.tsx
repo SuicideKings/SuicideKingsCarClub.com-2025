@@ -5,8 +5,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { Loader2, Plus, Trash2, Pencil, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import AdminNav from "@/components/admin/admin-nav"
-import AdminSidebar from "@/components/admin/admin-sidebar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/hooks/use-auth"
 
@@ -118,28 +116,16 @@ export default function AdminGalleryPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-900">
-        <AdminNav />
-        <div className="flex">
-          <AdminSidebar />
-          <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
-            <div className="flex h-64 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-white" />
-            </div>
-          </main>
+      <div className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-white" />
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <AdminNav />
-
-      <div className="flex">
-        <AdminSidebar />
-
-        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Gallery Management</h1>
             <Button className="bg-white text-black hover:bg-gray-200" asChild>
@@ -296,8 +282,6 @@ export default function AdminGalleryPage() {
               </div>
             </>
           )}
-        </main>
-      </div>
     </div>
   )
 }

@@ -1,10 +1,8 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import "./globals.css"
-import MobileNav from "@/components/mobile/mobile-nav"
+import ConditionalNav from "@/components/conditional-nav"
 import InstallPrompt from "@/components/mobile/install-prompt"
-import MainNav from "@/components/main-nav"
-import AnnouncementBanner from "@/components/announcement-banner"
 import { ThemeProvider } from "@/lib/theme-provider"
 
 export const metadata: Metadata = {
@@ -35,10 +33,8 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider defaultTheme="dark" storageKey="suicide-kings-theme">
-          <AnnouncementBanner />
-          <MainNav />
+          <ConditionalNav />
           {children}
-          <MobileNav />
           <InstallPrompt />
         </ThemeProvider>
         <script

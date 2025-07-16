@@ -4,8 +4,6 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import AdminNav from "@/components/admin/admin-nav"
-import AdminSidebar from "@/components/admin/admin-sidebar"
 import ImageUpload from "@/components/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -44,13 +42,7 @@ export default function GalleryUploadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <AdminNav />
-
-      <div className="flex">
-        <AdminSidebar />
-
-        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Upload Gallery Image</h1>
           </div>
@@ -160,8 +152,6 @@ export default function GalleryUploadPage() {
               </div>
             </form>
           </div>
-        </main>
-      </div>
     </div>
   )
 }
